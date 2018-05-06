@@ -849,4 +849,16 @@ Eigen-3.3/Eigen/QR
 /home/diogo/SDCND/Term3/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/QR
 json.hpp
 /home/diogo/SDCND/Term3/CarND-Path-Planning-Project/src/json.hpp
+spline.h
+/home/diogo/SDCND/Term3/CarND-Path-Planning-Project/src/spline.h
+
+/home/diogo/SDCND/Term3/CarND-Path-Planning-Project/src/spline.h
+cstdio
+-
+cassert
+-
+vector
+-
+algorithm
+-
 
