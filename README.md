@@ -14,9 +14,10 @@ The highway's waypoints loop around so the frenet s value, distance along the ro
 
 ## Implementation
 
+[errors]: ./error_cropped.png "Error when generating waypoints"
 
+![alt_text][errors]
 
----
 
 ## Details
 

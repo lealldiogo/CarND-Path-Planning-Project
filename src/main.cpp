@@ -247,51 +247,72 @@ int main() {
             // Size of previous_path
             int prev_size = previous_path_x.size();
 
+            std::cout << "Previous path size: " << prev_size << std::endl;
+
             if (prev_size>0)
             {
               car_s = end_path_s;
             }
 
+            // Environment information
             bool too_close = false;
+            bool left_free = true;
+            bool right_free = true;
 
             // loop through other cars attributes
             for (int i = 0; i < sensor_fusion.size(); i++)
             {
               float d = sensor_fusion[i][6];
+              double vx = sensor_fusion[i][3];
+              double vy = sensor_fusion[i][4];
+              double speed_mag = sqrt(vx*vx + vy*vy);
+              double check_car_s = sensor_fusion[i][5];
+
+              // project s values in time
+              check_car_s += ((double)prev_size*0.02*speed_mag);
+
               if (d<(2+4*lane+2) && d>(2+4*lane-2))
               {
-                double vx = sensor_fusion[i][3];
-                double vy = sensor_fusion[i][4];
-                double speed_mag = sqrt(vx*vx + vy*vy);
-                double check_car_s = sensor_fusion[i][5];
-
-                // project s values in time
-                check_car_s += ((double)prev_size*0.02*speed_mag);
-
                 // check if the car is in front and closer than 30m
                 if ((check_car_s>car_s) && ((check_car_s-car_s) <30))
                 {
                   too_close = true;
-                  // TODO: find out how to change lanes while checking other cars
-                  // Suggestion: create a cost function
-                  // If the car is not in the left most lane change to it
-                  if (lane>0)
-                  {
-                    lane=0;
-                  }
                 }
-              }
+              } //else if (d<(2+4*(lane-1)+2) && d>(2+4*(lane-1)-2))
+              // {
+              //   // check if the car is less than 5m behind and closer than 30m
+              //   if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
+              //   {
+              //     left_free = false;
+              //   }
+              // } else if (d<(2+4*(lane+1)+2) && d>(2+4*(lane+1)-2))
+              // {
+              //   // check if the car is less than 5m behind and closer than 30m
+              //   if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
+              //   {
+              //     right_free = false;
+              //   }
+              // }
             }
 
             if (too_close)
             {
-              ref_vel -= 0.224;
+              // if(left_free && (lane>0))
+              // {
+              //   lane-=1;
+              // }
+              // else if (right_free && (lane<2))
+              // {
+              //   lane+=1;
+              // }
+              // else {
+                ref_vel-= 0.224;
+              // }
             }
             else if (ref_vel<49.5)
             {
               ref_vel += 0.224;
             }
-
 
             // TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
 
@@ -416,6 +437,8 @@ int main() {
           	json msgJson;
             msgJson["next_x"] = next_x_vals;
             msgJson["next_y"] = next_y_vals;
+
+            std::cout << "Next path size " << next_x_vals.size() << std::endl;
 
             auto msg = "42[\"control\","+ msgJson.dump()+"]";
 
