@@ -1,8 +1,9 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
 
+[errors]: ./error_cropped.png "Error when generating waypoints"
 ### Simulator.
-You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
+You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab](https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).
 
 ### Goals
 In this project the goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. The car's localization and sensor fusion data are provided, along with sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 10 m/s^3.
@@ -13,11 +14,23 @@ Each waypoint in the list contains  [x,y,s,dx,dy] values. x and y are the waypoi
 The highway's waypoints loop around so the frenet s value, distance along the road, goes from 0 to 6945.554.
 
 ## Implementation
+I started out following the project walkthrough and got to the point was driving pretty smoothly on its lane and slowing down when detected a car in front of it and in the same lane. The approach used was based on the information provided by the simulation and basic math and physics of the environment to generate a safe trajectory for the car to follow. The trajectory was generated using the Spline library (more information at the end of the README).
 
-[errors]: ./error_cropped.png "Error when generating waypoints"
+Unfortunately, I experienced some errors that made my waypoint trajectory "blink" and generate just a few points ahead of the car as observed below.
 
 ![alt_text][errors]
 
+As I was unable to solve the error, I decided to ignore it and implement the changing lanes decision logic.I did this by expanding the base idea and used the info of the cars on the other lanes to check if they were free and decide or not to change lanes, checking the left lane first.
+
+I tested initializing `ref_vel =  49.5` since the blinking was making the car accelerate too slow. Like that I was able to verify that the car did change lanes when they were free and drove safely around the track. After that I changed it back to zero for submission.
+
+## Possible Improvements
+
+It would be better to define a cost function to evaluate more scenarios and make the car chose the trajectory with minimum cost based on predefined weights. This would be much harder to implemente and as I wasn't certain about how to implement this approach, I preferred the simple one.
+
+And of course another possible improvement would be to solve the error I experienced.
+
+---
 
 ## Details
 

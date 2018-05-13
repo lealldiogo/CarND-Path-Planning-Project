@@ -276,41 +276,46 @@ int main() {
                 // check if the car is in front and closer than 30m
                 if ((check_car_s>car_s) && ((check_car_s-car_s) <30))
                 {
+                  std::cout << "Car ahead!" << std::endl;
                   too_close = true;
                 }
-              } //else if (d<(2+4*(lane-1)+2) && d>(2+4*(lane-1)-2))
-              // {
-              //   // check if the car is less than 5m behind and closer than 30m
-              //   if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
-              //   {
-              //     left_free = false;
-              //   }
-              // } else if (d<(2+4*(lane+1)+2) && d>(2+4*(lane+1)-2))
-              // {
-              //   // check if the car is less than 5m behind and closer than 30m
-              //   if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
-              //   {
-              //     right_free = false;
-              //   }
-              // }
+              } else if (d<(2+4*(lane-1)+2) && d>(2+4*(lane-1)-2))
+              {
+                // check if the car is less than 5m behind and closer than 30m
+                if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
+                {
+                  std::cout << "Left lane busy" << std::endl;
+                  left_free = false;
+                }
+              } else if (d<(2+4*(lane+1)+2) && d>(2+4*(lane+1)-2))
+              {
+                // check if the car is less than 5m behind and closer than 30m
+                if ((check_car_s>car_s-5) && ((check_car_s-car_s) <30))
+                {
+                  std::cout << "Right lane busy" << std::endl;
+                  right_free = false;
+                }
+              }
             }
 
             if (too_close)
             {
-              // if(left_free && (lane>0))
-              // {
-              //   lane-=1;
-              // }
-              // else if (right_free && (lane<2))
-              // {
-              //   lane+=1;
-              // }
-              // else {
+              if(left_free && (lane>0))
+              {
+                lane-=1;
+              }
+              else if (right_free && (lane<2))
+              {
+                lane+=1;
+              }
+              else {
+                std::cout << "deccelerating" << std::endl;
                 ref_vel-= 0.224;
-              // }
+              }
             }
             else if (ref_vel<49.5)
             {
+              std::cout << "accelerating" << std::endl;
               ref_vel += 0.224;
             }
 
@@ -438,7 +443,7 @@ int main() {
             msgJson["next_x"] = next_x_vals;
             msgJson["next_y"] = next_y_vals;
 
-            std::cout << "Next path size " << next_x_vals.size() << std::endl;
+            std::cout << "Next path size: " << next_x_vals.size() << std::endl;
 
             auto msg = "42[\"control\","+ msgJson.dump()+"]";
 
